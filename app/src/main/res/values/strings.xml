@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Fingertip</string>
+    <string name="btn_add_member">Agregar miembro</string>
+    <string name="btn_register_member">Registrar</string>
+    <string name="btn_cancel">Cancelar</string>
 </resources>
