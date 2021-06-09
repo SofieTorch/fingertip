@@ -3,13 +3,17 @@ package com.picateclas.fingertip.Services;
 import android.content.Context;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class FileService {
-    private final String _fileName = "MembersList.txt";
+    private static final String _fileName = "MembersList.txt";
     private final Context context;
 
     public FileService(Context context) {
@@ -46,7 +50,7 @@ public class FileService {
         OutputStreamWriter outputStreamWriter = null;
         try {
             outputStreamWriter = new OutputStreamWriter(context.openFileOutput(_fileName, Context.MODE_APPEND));
-            outputStreamWriter.write(memberId + ",");
+            outputStreamWriter.write(memberId + "\n");
             outputStreamWriter.flush();
             outputStreamWriter.close();
             return true;
@@ -57,5 +61,31 @@ public class FileService {
             return false;
         }
     }
+
+    public static List<String> getMembersIds(Context context) {
+
+        try {
+            InputStreamReader inputStreamReader = new InputStreamReader(context.openFileInput(_fileName));
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String linea = bufferedReader.readLine();
+            List<String> membersIds = new ArrayList<String>();
+
+            while(linea != null){
+                // datos = linea.split("\\,");
+                // String nombre = datos[0];
+                membersIds.add(linea);
+                linea = bufferedReader.readLine();
+            }
+
+            return membersIds;
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 
 }

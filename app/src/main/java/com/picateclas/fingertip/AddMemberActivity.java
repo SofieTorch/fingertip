@@ -14,7 +14,7 @@ import com.picateclas.fingertip.Services.FirebaseService;
 
 public class AddMemberActivity extends AppCompatActivity {
 
-    EditText etName, etAge;
+    EditText etName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,24 +22,23 @@ public class AddMemberActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_member);
 
         etName = findViewById(R.id.etName);
-        etAge = findViewById(R.id.etAge);
     }
 
     public void register(View view) {
         String name = etName.getText().toString().trim();
-        String ageStr = etAge.getText().toString().trim();
         int age;
 
-        if (name.isEmpty() || ageStr.isEmpty()) {
+        // valida si los campos estan vacios
+        if (name.isEmpty()) {
             Toast.makeText(this,
                     "Debe todos los campos",
                     Toast.LENGTH_LONG)
                     .show();
         }
         else {
-            age = Integer.parseInt(ageStr);
-            String memberId = registerToDatabase(name, age);
-            saveMemberId(memberId);
+            // age = Integer.parseInt(ageStr);
+            // String memberId = registerToDatabase(name, age);
+            // saveMemberId(memberId);
         }
     }
 
@@ -48,7 +47,9 @@ public class AddMemberActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // registra a la base de datos
     private String registerToDatabase(String name, int age) {
+        // miembro a registrar
         Member member = new Member(name, age);
         return FirebaseService.getInstance().registerNewMember(member);
     }
