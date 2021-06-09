@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -68,16 +69,14 @@ public class FileService {
             InputStreamReader inputStreamReader = new InputStreamReader(context.openFileInput(_fileName));
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String linea = bufferedReader.readLine();
-            List<String> membersIds = new ArrayList<String>();
+            HashSet<String> membersIds = new HashSet<String>();
 
             while(linea != null){
-                // datos = linea.split("\\,");
-                // String nombre = datos[0];
                 membersIds.add(linea);
                 linea = bufferedReader.readLine();
             }
 
-            return membersIds;
+            return new ArrayList<String>(membersIds);
 
         }
         catch (IOException e) {
