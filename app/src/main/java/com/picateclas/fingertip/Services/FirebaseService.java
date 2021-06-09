@@ -39,7 +39,11 @@ public class FirebaseService {
     }
 
     // void -> List<Member>
-    public void getMembers(Context context) {
+    public List<Member> getMembers(List<Member> members) {
+        return members;
+    }
+
+    public void getMembersDataBase(Context context) {
         List<String> membersIds = FileService.getMembersIds(context);
         List<Member> members = new ArrayList<Member>();
 
@@ -53,11 +57,18 @@ public class FirebaseService {
                     }
                     else {
                         Log.d("firebase", String.valueOf(task.getResult().getValue()));
+                        String name = (String) task.getResult().child("name").getValue();
+                        String age = (String) task.getResult().child("age").getValue();
+                        members.add(new Member(name, Integer.parseInt(age), memberId));
+                        if (members.size() == membersIds.size()) {
+                            getMembers(members);
+                        }
                     }
                 }
-
             });
         }
 
     }
+
+
 }

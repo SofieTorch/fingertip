@@ -5,6 +5,12 @@ public class Member {
     private String _name;
     private int _age;
 
+    public Member(String name, int age, String id) {
+        this._name = name;
+        this._age = age;
+        this._id = id;
+    }
+
     public Member(String name, int age) {
         this._name = name;
         this._age = age;

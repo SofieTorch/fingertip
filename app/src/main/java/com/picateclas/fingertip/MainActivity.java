@@ -24,10 +24,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void testSentMessage(View view) {
         TelegramService ts = new TelegramService();
-        ts.intentMessageTelegram(this, "Holi :3");
+        ts.intentMessageTelegram(this, "El Andy nos traicionó");
     }
 
     public void getDataTest(View view) {
-        FirebaseService.getInstance().getMembers(this);
+        FirebaseService.getInstance().getMembersDataBase(this);
     }
 }
