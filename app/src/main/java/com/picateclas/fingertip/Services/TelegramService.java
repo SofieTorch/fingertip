@@ -30,11 +30,11 @@ public class TelegramService {
 
     public void sendTelegramIds(Context context, List<Member> members)
     {
-        String membersIds = "";
+        StringBuilder membersIds = new StringBuilder();
         for (Member member: members) {
-            membersIds = membersIds + member.getId() + "\n";
+            membersIds.append(member.getId()).append("\n");
         }
-        intentMessageTelegram(context, membersIds);
+        intentMessageTelegram(context, membersIds.toString());
     }
 
     /**

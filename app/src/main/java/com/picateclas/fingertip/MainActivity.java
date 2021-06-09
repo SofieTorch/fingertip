@@ -12,6 +12,8 @@ import com.picateclas.fingertip.Models.Member;
 import com.picateclas.fingertip.Services.FirebaseService;
 import com.picateclas.fingertip.Services.TelegramService;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements FirebaseListener {
@@ -33,7 +35,13 @@ public class MainActivity extends AppCompatActivity implements FirebaseListener 
 
     public void testSentMessage(View view) {
         TelegramService ts = new TelegramService();
-        ts.intentMessageTelegram(this, "El Andy nos traicionó");
+
+        List<Member> members = Arrays.asList(
+            new Member("Dani", 19, "-MbhlRg9v1qW6WDituns"),
+            new Member("Vale", 19, "-MbikhlWtSKnZrvGvE14")
+        );
+
+        ts.sendTelegramIds(this, members);
     }
 
     public void getDataTest(View view) {
