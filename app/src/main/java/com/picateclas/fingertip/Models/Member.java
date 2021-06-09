@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 public class Member {
     private String _id;
     private String _name;
+    // cambiar edad por fecha de nacimiento
     private int _age;
 
     public Member(String name, int age, String id) {

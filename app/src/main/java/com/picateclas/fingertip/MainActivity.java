@@ -17,7 +17,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements FirebaseListener {
-    EditText etMembersTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseListener 
         setContentView(R.layout.activity_main);
 
         FirebaseService.getInstance().suscribe(this);
-        etMembersTest = findViewById(R.id.etMembersTest);
+        FirebaseService.getInstance().getMembersDataBase(this);
     }
 
     public void addMember(View view) {
@@ -44,14 +43,23 @@ public class MainActivity extends AppCompatActivity implements FirebaseListener 
         ts.sendTelegramIds(this, members);
     }
 
-    public void getDataTest(View view) {
-        FirebaseService.getInstance().getMembersDataBase(this);
-    }
+    /*
+    * Seleccionar los miembros a compartir
+    * y guardarlos en un List<Member>
+    * enviar la lista a ts.sendTelegramIds(this, members <- aqui xd );
+     */
+
+    /*
+    * evento onRestore (cuando vas a otra activity y vuelves)
+    * para volver a cargar los miembros, solo hace falta llamar a
+    * FirebaseService.getInstance().getMembersDataBase(this);
+     */
+
 
     @Override
     public void onMembersReceived(List<Member> members) {
         for (Member member: members) {
-            etMembersTest.append(member + "\n");
+            // mostrar los miembros en la interfaz
         }
     }
 }
