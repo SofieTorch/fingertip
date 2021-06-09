@@ -1,5 +1,7 @@
 package com.picateclas.fingertip.Models;
 
+import androidx.annotation.NonNull;
+
 public class Member {
     private String _id;
     private String _name;
@@ -26,4 +28,9 @@ public class Member {
     }
 
     public String getId() { return _id; }
+
+    @Override
+    public String toString() {
+        return _name + ", " + _age + " años";
+    }
 }
