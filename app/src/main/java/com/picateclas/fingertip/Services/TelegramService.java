@@ -4,6 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 
+import com.picateclas.fingertip.Models.Member;
+
+import java.util.List;
+
 public class TelegramService {
 
     /* Intent to send a telegram message
@@ -22,6 +26,15 @@ public class TelegramService {
         }
 
         return isAppInstalled;
+    }
+
+    public void sendTelegramIds(Context context, List<Member> members)
+    {
+        String membersIds = "";
+        for (Member member: members) {
+            membersIds = membersIds + member.getId() + "\n";
+        }
+        intentMessageTelegram(context, membersIds);
     }
 
     /**
