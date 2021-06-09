@@ -62,7 +62,6 @@ public class FirebaseService {
                         Log.e("firebase", "Error getting data", task.getException());
                     }
                     else {
-                        Log.d("firebase", String.valueOf(task.getResult().getValue()));
                         String name = String.valueOf(task.getResult().child("name").getValue());
                         String age = String.valueOf(task.getResult().child("age").getValue());
                         members.add(new Member(name, Integer.parseInt(age), memberId));
@@ -77,7 +76,30 @@ public class FirebaseService {
                 }
             });
         }
+    }
 
+    public void verifyIfIdExists(String id) {
+        DatabaseReference member = _database.getReference("members");
+        member.child(id).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    if(task.getResult().getValue() == null) {
+                        for(FirebaseListener listener : _listeners) {
+                            listener.onIdVerificationCompleted(false);
+                        }
+                    }
+                    else {
+                        for(FirebaseListener listener : _listeners) {
+                            listener.onIdVerificationCompleted(false);
+                        }
+                    }
+                }
+            }
+        });
     }
 
 
