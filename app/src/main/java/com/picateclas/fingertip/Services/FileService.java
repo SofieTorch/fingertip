@@ -19,14 +19,14 @@ public class FileService {
 
     public FileService(Context context) {
         this.context = context;
-        createFile(_fileName);
+        createFile();
     }
 
-    private boolean verifyIfFileExists(String fileName) {
+    public boolean verifyIfFileExists() {
         boolean res = false;
         String[] files = this.context.fileList();
         for (String file : files) {
-            if (fileName.equals(file)) {
+            if (_fileName.equals(file)) {
                 res = true;
                 break;
             }
@@ -35,10 +35,10 @@ public class FileService {
         return res;
     }
 
-    private void createFile(String fileName) {
-        if (!verifyIfFileExists(fileName)){
+    private void createFile() {
+        if (!verifyIfFileExists()){
             try {
-                FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+                FileOutputStream fileOutputStream = context.openFileOutput(_fileName, Context.MODE_PRIVATE);
                 fileOutputStream.close();
             }
             catch (IOException e) {
@@ -63,7 +63,7 @@ public class FileService {
         }
     }
 
-    public static List<String> getMembersIds(Context context) {
+    public List<String> getMembersIds() {
 
         try {
             InputStreamReader inputStreamReader = new InputStreamReader(context.openFileInput(_fileName));

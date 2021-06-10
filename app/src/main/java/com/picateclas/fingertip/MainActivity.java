@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.picateclas.fingertip.Interfaces.FirebaseListener;
 import com.picateclas.fingertip.Models.Member;
+import com.picateclas.fingertip.Services.FileService;
 import com.picateclas.fingertip.Services.FirebaseService;
 import com.picateclas.fingertip.Services.TelegramService;
 
@@ -24,8 +25,11 @@ public class MainActivity extends AppCompatActivity implements FirebaseListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        FileService fileService = new FileService(this);
         FirebaseService.getInstance().suscribe(this);
-        FirebaseService.getInstance().getMembersDataBase(this);
+
+        if (fileService.verifyIfFileExists())
+            FirebaseService.getInstance().getMembersDataBase(this);
     }
 
     public void addMember(View view) {

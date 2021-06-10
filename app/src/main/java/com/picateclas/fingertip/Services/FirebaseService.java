@@ -47,7 +47,8 @@ public class FirebaseService {
     }
 
     public void getMembersDataBase(Context context) {
-        List<String> membersIds = FileService.getMembersIds(context);
+        FileService fileService = new FileService(context);
+        List<String> membersIds = fileService.getMembersIds();
         List<Member> members = new ArrayList<Member>();
 
         for (String memberId: membersIds) {
