@@ -20,22 +20,29 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements FirebaseListener {
 
+    EditText etMembers;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        etMembers = findViewById(R.id.etMembers);
 
         FileService fileService = new FileService(this);
         FirebaseService.getInstance().suscribe(this);
 
         if (fileService.verifyIfFileExists())
             FirebaseService.getInstance().getMembersDataBase(this);
+
+
     }
 
     public void addMember(View view) {
         Intent intent = new Intent(this, AddMemberActivity.class);
         startActivity(intent);
     }
+
+
 
     public void testSentMessage(View view) {
         TelegramService ts = new TelegramService();
@@ -98,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseListener 
     public void onMembersReceived(List<Member> members) {
         for (Member member: members) {
             // mostrar los miembros en la interfaz
+            etMembers.append(member.getName());
         }
     }
 

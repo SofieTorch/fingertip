@@ -14,7 +14,7 @@
         android:ems="10"
         android:fontFamily="@font/poppinsregular"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/editTextDate"
+        app:layout_constraintBottom_toTopOf="@+id/etAge"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.555"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +22,7 @@
         app:layout_constraintVertical_bias="0.096" />
 
     <EditText
-        android:id="@+id/editTextDate"
+        android:id="@+id/etAge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="140dp"
@@ -68,14 +68,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppinsregular"
-        android:text="Fecha de Nacimiento"
+        android:text="Edad"
         android:textColor="#042444"
-        app:layout_constraintBottom_toTopOf="@+id/editTextDate"
+        app:layout_constraintBottom_toTopOf="@+id/etAge"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.306"
+        app:layout_constraintHorizontal_bias="0.213"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etName"
-        app:layout_constraintVertical_bias="0.62" />
+        app:layout_constraintVertical_bias="0.653" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -94,22 +94,24 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDate">
+        app:layout_constraintTop_toBottomOf="@+id/etAge">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btnCancel"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
             android:fontFamily="@font/poppinsregular"
+            android:onClick="cancel"
             android:text="Cancelar" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/btnAddMember"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:fontFamily="@font/poppinsregular"
+            android:onClick="register"
             android:text="Agregar" />
     </LinearLayout>
 
