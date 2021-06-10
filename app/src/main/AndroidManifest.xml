@@ -9,7 +9,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Fingertip">
-        <activity android:name=".TestShareWithActivity"></activity>
         <activity android:name=".AddMemberActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
