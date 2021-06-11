@@ -122,6 +122,13 @@ public class MainActivity extends AppCompatActivity implements FirebaseListener 
 
             Button btn = new Button(this);
             btn.setText(member.getName());
+            btn.setOnClickListener((v -> {
+                Intent intent = new Intent(this, activity_menu.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("memberId",member.getId());
+                startActivity(intent);
+
+            }));
 
             lyMembers.addView(btn);
         }
@@ -138,4 +145,6 @@ public class MainActivity extends AppCompatActivity implements FirebaseListener 
                 Toast.LENGTH_LONG)
                 .show();
     }
+
+
 }
