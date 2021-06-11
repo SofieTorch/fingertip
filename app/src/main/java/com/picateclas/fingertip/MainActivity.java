@@ -4,8 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.picateclas.fingertip.Interfaces.FirebaseListener;
@@ -20,13 +23,13 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements FirebaseListener {
 
-    EditText etMembers;
+    LinearLayout lyMembers;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        etMembers = findViewById(R.id.etMembers);
+        lyMembers = findViewById(R.id.lyMembers);
 
         FileService fileService = new FileService(this);
         FirebaseService.getInstance().suscribe(this);
@@ -42,6 +45,11 @@ public class MainActivity extends AppCompatActivity implements FirebaseListener 
         startActivity(intent);
     }
 
+    public void submitMember(View view) {
+
+        Intent intent = new Intent(this, AddMemberActivity.class);
+        startActivity(intent);
+    }
 
 
     public void testSentMessage(View view) {
@@ -99,13 +107,30 @@ public class MainActivity extends AppCompatActivity implements FirebaseListener 
     * FirebaseService.getInstance().getMembersDataBase(this);
      */
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
 
     // método heredado de FirebaseListener
     @Override
     public void onMembersReceived(List<Member> members) {
+
         for (Member member: members) {
             // mostrar los miembros en la interfaz
-            etMembers.append(member.getName());
+            //etMembers.append(member.getName() + "\n");
+
+            Button btn = new Button(this);
+            btn.setText(member.getName());
+            btn.setOnClickListener((v -> {
+                Intent intent = new Intent(this, activity_menu.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("memberId",member.getId());
+                startActivity(intent);
+
+            }));
+
+            lyMembers.addView(btn);
         }
     }
 
@@ -120,4 +145,6 @@ public class MainActivity extends AppCompatActivity implements FirebaseListener 
                 Toast.LENGTH_LONG)
                 .show();
     }
+
+
 }
