@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.picateclas.fingertip.Interfaces.FirebaseListener;
+import com.picateclas.fingertip.Models.DataSensor;
 import com.picateclas.fingertip.Models.Member;
 import com.picateclas.fingertip.Services.FileService;
 import com.picateclas.fingertip.Services.FirebaseService;
@@ -126,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseListener 
                 Intent intent = new Intent(this, activity_menu.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("memberId",member.getId());
+                intent.putExtras(bundle);
                 startActivity(intent);
 
             }));
@@ -145,6 +147,9 @@ public class MainActivity extends AppCompatActivity implements FirebaseListener 
                 Toast.LENGTH_LONG)
                 .show();
     }
+
+    @Override
+    public void onSensorDataFromDbReceived(List<DataSensor> data) { }
 
 
 }
