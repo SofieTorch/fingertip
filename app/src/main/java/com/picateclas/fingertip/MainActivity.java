@@ -45,6 +45,11 @@ public class MainActivity extends AppCompatActivity implements FirebaseListener 
         startActivity(intent);
     }
 
+    public void submitMember(View view) {
+
+        Intent intent = new Intent(this, AddMemberActivity.class);
+        startActivity(intent);
+    }
 
 
     public void testSentMessage(View view) {

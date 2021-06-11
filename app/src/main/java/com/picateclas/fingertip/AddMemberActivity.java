@@ -31,9 +31,6 @@ public class AddMemberActivity extends AppCompatActivity {
 
         // valida si los campos estan vacios
         if (name.isEmpty() || etAge.getText().toString().equals("")) {
-
-
-
             Toast.makeText(this,
                     "Debe llenar todos los campos",
                     Toast.LENGTH_LONG)
