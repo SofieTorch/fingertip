@@ -45,6 +45,12 @@ public class MainActivity extends AppCompatActivity implements FirebaseListener 
         startActivity(intent);
     }
 
+    public void sendTelegram(View view) {
+        Intent intent = new Intent(this, checkMembers.class);
+        startActivity(intent);
+    }
+
+
     public void submitMember(View view) {
 
         Intent intent = new Intent(this, AddMemberActivity.class);
