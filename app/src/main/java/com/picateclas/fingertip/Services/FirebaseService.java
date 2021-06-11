@@ -4,13 +4,17 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.picateclas.fingertip.Interfaces.FirebaseListener;
+import com.picateclas.fingertip.Models.DataSensor;
 import com.picateclas.fingertip.Models.Member;
 
 import java.util.ArrayList;
@@ -80,8 +84,8 @@ public class FirebaseService {
     }
 
     public void verifyIfIdExists(String id) {
-        DatabaseReference member = _database.getReference("members");
-        member.child(id).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        DatabaseReference members = _database.getReference("members");
+        members.child(id).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
@@ -101,6 +105,68 @@ public class FirebaseService {
                 }
             }
         });
+    }
+
+    public void sendSensorData(Context context, String id, double avgOxigen, double avgHeartRate) {
+        DatabaseReference memberSensorData = _database.getReference("members/" + id + "/HRSpO2Data");
+
+        String dataId = memberSensorData.push().getKey();
+        DataSensor data = new DataSensor(String.valueOf(avgHeartRate), String.valueOf(avgOxigen));
+        memberSensorData.child(dataId).setValue(data);
+
+    }
+
+    public void getSensorDbData(Context context, String id) {
+        List<DataSensor> listSensorData = new ArrayList<DataSensor>();
+        DatabaseReference memberOxigen = _database.getReference("members/" + id + "/HRSpO2Data");
+
+        ChildEventListener childEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.d("firebase", "onChildAdded:" + dataSnapshot.getKey());
+
+                // A new comment has been added, add it to the displayed list
+                DataSensor sensorData = dataSnapshot.getValue(DataSensor.class);
+                listSensorData.add(sensorData);
+
+                for (FirebaseListener suscriber: _listeners) {
+                    suscriber.onSensorDataFromDbReceived(listSensorData);
+                }
+
+                // ...
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
+                // Log.d("firebase", "onChildChanged:" + dataSnapshot.getKey());
+
+                // A comment has changed, use the key to determine if we are displaying this
+                // comment and if so displayed the changed comment.
+//                DataSensor sensorData = dataSnapshot.getValue(DataSensor.class);
+//                String sensorDataKey = dataSnapshot.getKey();
+
+//                for (FirebaseListener suscriber: _listeners) {
+//                    suscriber.onSensorDataFromDbReceived(listSensorData);
+//                }
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) { }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("firebase", "postComments:onCancelled", databaseError.toException());
+//                Toast.makeText(mContext, "Failed to load comments.",
+//                        Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        memberOxigen.addChildEventListener(childEventListener);
+
     }
 
 
