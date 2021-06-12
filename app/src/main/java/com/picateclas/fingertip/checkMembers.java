@@ -64,14 +64,16 @@ public class checkMembers extends AppCompatActivity implements FirebaseListener{
             }));
             lyCheckMembers.addView(checkBox);
 
-
         }
     }
 
-
-
     @Override
-    public void onIdVerificationCompleted(boolean idExists) {
+    public void onIdVerificationCompleted(boolean idExists, String memberId) {
 
+    }
+
+    public void sendThroughTelegram(View view) {
+        TelegramService ts = new TelegramService();
+        ts.sendTelegramIds(this, membersList);
     }
 }

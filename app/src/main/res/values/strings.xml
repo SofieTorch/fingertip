@@ -3,4 +3,6 @@
     <string name="btn_add_member">Agregar miembro</string>
     <string name="btn_register_member">Registrar</string>
     <string name="btn_cancel">Cancelar</string>
+    <string name="telegram_actions_share_members">Compartir miembros</string>
+    <string name="telegram_actions_import_members">Importar miembros</string>
 </resources>

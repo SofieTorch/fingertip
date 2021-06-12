@@ -1,14 +1,19 @@
 package com.picateclas.fingertip;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Layout;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.picateclas.fingertip.Interfaces.FirebaseListener;
@@ -21,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements FirebaseListener {
+public class MainActivity extends AppCompatActivity implements FirebaseListener, PopupMenu.OnMenuItemClickListener {
 
     LinearLayout lyMembers;
     @Override
@@ -30,104 +35,105 @@ public class MainActivity extends AppCompatActivity implements FirebaseListener 
         setContentView(R.layout.activity_main);
 
         lyMembers = findViewById(R.id.lyMembers);
-
-        FileService fileService = new FileService(this);
         FirebaseService.getInstance().suscribe(this);
 
+    }
+
+
+    private void loadMembers() {
+        FileService fileService = new FileService(this);
         if (fileService.verifyIfFileExists())
             FirebaseService.getInstance().getMembersDataBase(this);
-
-
     }
+
 
     public void addMember(View view) {
         Intent intent = new Intent(this, AddMemberActivity.class);
         startActivity(intent);
     }
 
-    public void sendTelegram(View view) {
-        Intent intent = new Intent(this, checkMembers.class);
-        startActivity(intent);
+
+    public void showTelegramActionsMenu(View view) {
+        PopupMenu popup = new PopupMenu(this, view);
+        popup.setOnMenuItemClickListener(this);
+        popup.inflate(R.menu.telegram_actions);
+        popup.show();
     }
 
 
-    public void submitMember(View view) {
+    public void openTelegramDialogToAddMember() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+        alertDialog.setTitle("Importar miembros");
+        alertDialog.setMessage("Inserte el mensaje de Telegram con los identificadores que le mandaron :)");
 
-        Intent intent = new Intent(this, AddMemberActivity.class);
-        startActivity(intent);
+        final EditText input = new EditText(MainActivity.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alertDialog.setView(input);
+        // alertDialog.setIcon(R.drawable.key);
+
+        alertDialog.setPositiveButton("Agregar",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String[] membersIdsArray = input.getText().toString().split("\n");
+                        for (String memberId : membersIdsArray) {
+                            FirebaseService.getInstance().verifyIfIdExists(memberId);
+                        }
+                    }
+                });
+
+        alertDialog.setNegativeButton("Cancelar",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
     }
 
-
-    public void testSentMessage(View view) {
-        TelegramService ts = new TelegramService();
-
-        List<Member> members = Arrays.asList(
-            new Member("Dani", 19, "-MbhlRg9v1qW6WDituns"),
-            new Member("Vale", 19, "-MbikhlWtSKnZrvGvE14")
-        );
-
-        ts.sendTelegramIds(this, members);
-    }
-
-    public void testVerifyId(View view) {
-        // esto llama a la verificacion de un id, lo puse aqui para hacer la prueba al presionar un boton xD
-        FirebaseService.getInstance().verifyIfIdExists("asdfaffs");
-    }
-
-    /*
-    * Seleccionar los miembros a compartir
-    * y guardarlos en un List<Member>
-    * enviar la lista a ts.sendTelegramIds(this, members <- aqui xd );
-     */
-
-    /*
-    * Para "importar" ids (agregar miembros mediante el id que alguien mas te pasa)
-    * un campo para pegar el texto, los ids deberían estar separados por enters (\n), como lo enviamos a telegram,
-    * asi que habria que separar la cadena y crear un array, quiza, o una lista o algo xD para iterar en los ids
-    * y verificar si existen, para verificar que un id existe solo llaman a
-    * FirebaseService.getInstance().verifyIfIdExists("asdfaffs");
-    * y le pasan el id como string en lugar de asdfaffs xD
-    * cuando se verifique, se ejecutará el método onIdVerificationCompleted
-    * que recibe el resultado (idExists), es true si el id existe, false si no existe
-    * Si el id existe, se añade al archivo de texto, para eso llaman a addMemberIdToFile(String memberId),
-    * de FileService, pero sería bueno que antes de agregarlo al archivo también verifiquen
-    * si es que ya existe en el archivo (para no tener duplicados),
-    * el método getMembersIds(Context context) de FileService les devuelve una lista de strings con los ids
-    * que ya estan registrados, entonces, si es que el id existe dentro de firebase y si es que aún no
-    * está guardado en el archivo, se lo guarda con addMemberIdToFile(String memberId).
-    *
-    *
-    * NO SÉ SI ESTO DEBA IR EN EL MAIN ACTIVITY O EN OTRA ACTIVITY O UNA VENTANA POP UP O KHEEE
-    * Pero ustedes vean eso xD el caso es que estas cosas funcionen kljsfjdfd
-    * Sólo que si utilizan otra clase asegúrense de que implemente la interfaz FirebaseListener y sus
-    * métodos, el onMembersReceived lo pueden dejar vacio xd
-    * y al implementarlo, en el contructor se deben suscribir al FirebaseService, con
-    * FirebaseService.getInstance().suscribe(this);
-    * y así les funcionará, eso si es que implementan esto en una clase aparte, como les dije
-    * ustedes vean qué es lo mejor xdxd
-    * */
-
-    /*
-    * evento onRestore (cuando vas a otra activity y vuelves)
-    * para volver a cargar los miembros, solo hace falta llamar a
-    * FirebaseService.getInstance().getMembersDataBase(this);
-     */
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
+    protected void onResume() {
+        super.onResume();
+        loadMembers();
     }
 
-    // método heredado de FirebaseListener
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.shareMembers:
+                Intent intent = new Intent(this, checkMembers.class);
+                startActivity(intent);
+                return true;
+            case R.id.importMembers:
+                openTelegramDialogToAddMember();
+                return true;
+            default:
+                return false;
+        }
+    }
+
+
+    @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})
     @Override
     public void onMembersReceived(List<Member> members) {
+        lyMembers.removeAllViews();
 
         for (Member member: members) {
-            // mostrar los miembros en la interfaz
-            //etMembers.append(member.getName() + "\n");
 
             Button btn = new Button(this);
+
             btn.setText(member.getName());
+            btn.setBackground(getResources().getDrawable(R.drawable.member_button_shape));
+            btn.setTextColor(getResources().getColor(R.color.black));
+            btn.setGravity(Gravity.CENTER_VERTICAL);
+            btn.setAllCaps(false);
+
             btn.setOnClickListener((v -> {
                 Intent intent = new Intent(this, activity_menu.class);
                 Bundle bundle = new Bundle();
@@ -137,20 +143,31 @@ public class MainActivity extends AppCompatActivity implements FirebaseListener 
             }));
 
             lyMembers.addView(btn);
+
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) btn.getLayoutParams();
+            params.setMargins(0 ,4, 0, 8);
+            btn.setLayoutParams(params);
+
+            btn.setPadding(56, 8, 0, 8);
+            btn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_member_resized, 0, 0, 0);
+            btn.setCompoundDrawablePadding(14);
         }
     }
 
-    // método heredado de FirebaseListener
+
     @Override
-    public void onIdVerificationCompleted(boolean idExists) {
-        // este metodo se llama cuando un id no existe, la verificacion se hace
-        // cuando "importamos" ids, al pegar la lista de ids.
-        Toast.makeText(
+    public void onIdVerificationCompleted(boolean idExists, String memberId) {
+        if (idExists) {
+            FileService fs = new FileService(this);
+            fs.addMemberIdToFile(memberId);
+            loadMembers();
+        }
+        else {
+            Toast.makeText(
                 this,
                 "Uno de los identificadores que ingresaste no es correcto, verifica los datos e intentalo de nuevo :)",
                 Toast.LENGTH_LONG)
                 .show();
+        }
     }
-
-
 }

@@ -90,12 +90,12 @@ public class FirebaseService {
                 else {
                     if(task.getResult().getValue() == null) {
                         for(FirebaseListener listener : _listeners) {
-                            listener.onIdVerificationCompleted(false);
+                            listener.onIdVerificationCompleted(false, id);
                         }
                     }
                     else {
                         for(FirebaseListener listener : _listeners) {
-                            listener.onIdVerificationCompleted(false);
+                            listener.onIdVerificationCompleted(true, id);
                         }
                     }
                 }
