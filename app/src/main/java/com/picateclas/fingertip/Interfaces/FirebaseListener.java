@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface FirebaseListener {
     void onMembersReceived(List<Member> members);
-    void onIdVerificationCompleted(boolean idExists);
     void onSensorDataFromDbReceived(List<DataSensor> data);
+    void onIdVerificationCompleted(boolean idExists, String memberId);
 }

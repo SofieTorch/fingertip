@@ -17,20 +17,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class HttpSensorService {
     private static HttpSensorService instance;
 
     ArrayList<DataSensor> listDate = new ArrayList<DataSensor>();
 
-    private static ArrayList<HttpSensorObserver> suscribers;
+    private static Queue<HttpSensorObserver> suscribers;
 
     private Context context;
 
 
     private HttpSensorService()
     {
-        suscribers = new ArrayList<HttpSensorObserver>();
+        suscribers = new LinkedList<>();
     }
 
     public static HttpSensorService getInstance()
@@ -49,17 +51,16 @@ public class HttpSensorService {
 
     public void suscribe(HttpSensorObserver suscriber)
     {
-        suscribers.add(suscriber);
+        suscribers.poll();
+        suscribers.offer(suscriber);
     }
 
 
-
-
-    public   void getDatosServidor()
+    public void getDatosServidor()
     {
         listDate = new ArrayList<DataSensor>();
         RequestQueue queue = Volley.newRequestQueue(context);
-        String URL ="https://25c36cff3d1e.ngrok.io/sensor";
+        String URL ="https://cc546135f91b.ngrok.io/sensor";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

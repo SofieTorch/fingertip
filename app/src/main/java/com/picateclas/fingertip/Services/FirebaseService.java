@@ -18,21 +18,28 @@ import com.picateclas.fingertip.Models.DataSensor;
 import com.picateclas.fingertip.Models.Member;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 
 public class FirebaseService {
     private final FirebaseDatabase _database;
     private static FirebaseService _instance;
 
-    private List<FirebaseListener> _listeners;
+    private Stack<FirebaseListener> _suscribers;
 
     private FirebaseService() {
-        _listeners = new ArrayList<>();
+        _suscribers = new Stack<FirebaseListener>();
         _database = FirebaseDatabase.getInstance();
     }
 
     public void suscribe(FirebaseListener listener) {
-        _listeners.add(listener);
+        if (_suscribers.size() == 2) {
+            _suscribers.pop();
+        }
+        _suscribers.push(listener);
     }
 
     public static FirebaseService getInstance() {
@@ -72,7 +79,7 @@ public class FirebaseService {
                         members.add(new Member(name, Integer.parseInt(age), memberId));
 
                         if (members.size() == membersIds.size()) {
-                            for(FirebaseListener listener : _listeners) {
+                            for(FirebaseListener listener : _suscribers) {
                                 listener.onMembersReceived(members);
                             }
                         }
@@ -93,13 +100,13 @@ public class FirebaseService {
                 }
                 else {
                     if(task.getResult().getValue() == null) {
-                        for(FirebaseListener listener : _listeners) {
-                            listener.onIdVerificationCompleted(false);
+                        for(FirebaseListener listener : _suscribers) {
+                            listener.onIdVerificationCompleted(false, id);
                         }
                     }
                     else {
-                        for(FirebaseListener listener : _listeners) {
-                            listener.onIdVerificationCompleted(false);
+                        for(FirebaseListener listener : _suscribers) {
+                            listener.onIdVerificationCompleted(true, id);
                         }
                     }
                 }
@@ -126,10 +133,16 @@ public class FirebaseService {
                 Log.d("firebase", "onChildAdded:" + dataSnapshot.getKey());
 
                 // A new comment has been added, add it to the displayed list
-                DataSensor sensorData = dataSnapshot.getValue(DataSensor.class);
+                // DataSensor sensorData = dataSnapshot.getValue(DataSensor.class);
+
+                Map<String, Object>  data = (HashMap<String, Object>) dataSnapshot.getValue();
+                String hr = String.valueOf(data.get("hr"));
+                String spo2 = String.valueOf(data.get("spo2"));
+
+                DataSensor sensorData = new DataSensor(hr, spo2);
                 listSensorData.add(sensorData);
 
-                for (FirebaseListener suscriber: _listeners) {
+                for (FirebaseListener suscriber: _suscribers) {
                     suscriber.onSensorDataFromDbReceived(listSensorData);
                 }
 

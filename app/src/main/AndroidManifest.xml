@@ -10,7 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Fingertip">
-        <activity android:name=".activity_menu"></activity>
+        <activity android:name=".checkMembers"></activity>
+        <activity android:name=".activity_menu" />
         <activity android:name=".AddMemberActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
