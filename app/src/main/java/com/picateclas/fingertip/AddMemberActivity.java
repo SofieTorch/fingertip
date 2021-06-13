@@ -27,18 +27,19 @@ public class AddMemberActivity extends AppCompatActivity {
 
     public void register(View view) {
         String name = etName.getText().toString().trim();
-        String ageStr = etAge.getText().toString().trim();
-        int age;
+        int age = Integer.parseInt(etAge.getText().toString().trim());
 
-        if (name.isEmpty() || ageStr.isEmpty()) {
+        // valida si los campos estan vacios
+        if (name.isEmpty() || etAge.getText().toString().equals("")) {
             Toast.makeText(this,
-                    "Debe todos los campos",
+                    "Debe llenar todos los campos",
                     Toast.LENGTH_LONG)
                     .show();
         }
         else {
-            age = Integer.parseInt(ageStr);
+            // age = Integer.parseInt(ageStr);
             String memberId = registerToDatabase(name, age);
+
             saveMemberId(memberId);
         }
     }
@@ -48,7 +49,9 @@ public class AddMemberActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // registra a la base de datos
     private String registerToDatabase(String name, int age) {
+        // miembro a registrar
         Member member = new Member(name, age);
         return FirebaseService.getInstance().registerNewMember(member);
     }

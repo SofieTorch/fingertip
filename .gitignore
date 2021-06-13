@@ -1,5 +1,7 @@
 *.iml
 .gradle
+.floo
+.flooignore
 /local.properties
 .idea/
 /.idea/caches

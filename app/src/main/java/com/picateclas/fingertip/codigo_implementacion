@@ -1,0 +1,32 @@
+**** para el "onCreate"
+    HttpSensorService.getInstance().setContext(this);
+    HttpSensorService.getInstance().suscribe(this);
+
+**** Metodo de obtener datos con el boton
+    public void activarPeticion(View view)
+    {
+        HttpSensorService.getInstance().getDatosServidor();
+    }
+
+**** Metodo para mostrar los datos en la interfaz de usuario
+    public void  mostrarDatos()
+    {
+        textView.setText("");
+
+                double sumaOxigeno = 0;
+                double sumaPulso = 0;
+
+                for (Date item: listDate )
+                {
+                    sumaPulso += Double.parseDouble(item.getHr());
+                    sumaOxigeno += Double.parseDouble(item.getSpo2());
+                }
+                double promedioOxigeno = sumaOxigeno/5;
+                double promedioPulso = sumaPulso/5;
+
+                String promedioOxigenoString =  new Double(promedioOxigeno).toString();
+                String promedioPulsoString =  new Double(promedioPulso).toString();
+                textView.setText("Oxigeno " + promedioOxigenoString +  " Pulso " +promedioPulsoString);
+
+
+    }
