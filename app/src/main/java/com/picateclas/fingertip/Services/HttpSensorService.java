@@ -60,7 +60,7 @@ public class HttpSensorService {
     {
         listDate = new ArrayList<DataSensor>();
         RequestQueue queue = Volley.newRequestQueue(context);
-        String URL ="https://607e25c2a106.ngrok.io/sensor";
+        String URL ="https://43e32e03d7b8.ngrok.io/sensor";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
